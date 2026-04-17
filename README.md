@@ -4,6 +4,13 @@ Course homework repo — pair work, site in English, public GitHub so the teache
 
 We’re Ibrahim and Chika; links below. Commits should show who did what (different machines / `git config` per person).
 
+**Git email (so GitHub counts both contributors):** use each account’s **no-reply** address from **GitHub → Settings → Emails** (or these if they match yours):
+
+- Ibrahim: `IbrahimTheMaster@users.noreply.github.com`
+- Chika: `king2245@users.noreply.github.com`
+
+Set with `git config user.email "…"` in this repo before committing.
+
 **Ibrahim Aliyu** — https://github.com/IbrahimTheMaster  
 **Chika Chinedu David** — https://github.com/king2245  
 
