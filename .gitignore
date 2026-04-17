@@ -26,3 +26,6 @@ TASKS-AND-SETUP.private.md
 *TEAM-PLAN*.md
 *SETUP*.local*
 tasks-*.local.md
+
+# Local documentation (not published on GitHub)
+/docs/

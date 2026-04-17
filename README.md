@@ -13,13 +13,10 @@ Group project (two students). Website language: **English**. Repository must sta
 
 ## Collaboration and Git setup (both members)
 
-Read **[docs/COLLABORATION.md](docs/COLLABORATION.md)** for:
-
-1. How **Ibrahim** creates/owns the repo, sets commit identity, pushes, and **invites King**.
-2. How **King** accepts the invite, clones, sets **his own** `user.name` / `user.email`, and pushes.
+Detailed steps (repo invite, `git config`, SSH, push) are in **`docs/COLLABORATION.md`** in your **local** clone only — the **`docs/`** folder is listed in `.gitignore` and is **not** pushed to GitHub. Share that file with your partner (e.g. Teams) if they need it.
 
 Each person must commit with **their own** Git author so GitHub shows who did which part.
 
 ## Local-only planning
 
-Private task splits and notes can live in files matching `.gitignore` (e.g. `TASKS-AND-SETUP.private.md`); they are **not** pushed. The **PDF** submitted to Teams still must describe the division of work.
+Private task splits and notes can live in files matching `.gitignore` (e.g. `TASKS-AND-SETUP.private.md`, **`docs/`**); they are **not** pushed. The **PDF** submitted to Teams still must describe the division of work.
