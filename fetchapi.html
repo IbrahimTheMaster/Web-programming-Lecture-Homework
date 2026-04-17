@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fetch API — homework</title>
+    <title>Fetch API CRUD — homework</title>
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
@@ -21,12 +21,209 @@
         </ul>
       </nav>
     </header>
+
     <main>
-      <p class="stub">Fetch + PHP CRUD — todo.</p>
+      <p>
+        CRUD with <code>fetch</code> against <code>api/items.php</code>. Backend: MySQL if
+        <code>api/config.local.php</code> exists (see <code>api/config.local.example.php</code>), else
+        SQLite if PHP has it, else JSON under <code>data/</code> (gitignored). Use
+        <code>php -S localhost:8080</code> from the project root.
+      </p>
+      <p id="fetch-error" class="err" hidden></p>
+
+      <section class="crud-panel" aria-labelledby="fetch-form-title">
+        <h2 id="fetch-form-title">Add or edit</h2>
+        <form id="fetch-form">
+          <input type="hidden" id="ff-id" value="" />
+          <label>
+            Title
+            <input type="text" id="ff-title" required maxlength="120" />
+          </label>
+          <label>
+            Detail
+            <input type="text" id="ff-detail" required maxlength="240" />
+          </label>
+          <button type="submit" id="ff-save">Save</button>
+          <button type="button" id="ff-cancel" hidden>Cancel edit</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="fetch-list-title">
+        <h2 id="fetch-list-title">Rows (server)</h2>
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Detail</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="fetch-rows"></tbody>
+        </table>
+      </section>
     </main>
+
     <footer>
       <p>Ibrahim Aliyu — Neptun: XXXXXX</p>
       <p>Chika Chinedu David — Neptun: YYYYYY</p>
     </footer>
+
+    <script>
+      (function () {
+        var api = "api/items.php";
+        var tbody = document.getElementById("fetch-rows");
+        var form = document.getElementById("fetch-form");
+        var fieldId = document.getElementById("ff-id");
+        var fieldTitle = document.getElementById("ff-title");
+        var fieldDetail = document.getElementById("ff-detail");
+        var btnCancel = document.getElementById("ff-cancel");
+        var errEl = document.getElementById("fetch-error");
+        var editingId = null;
+
+        function showErr(msg) {
+          errEl.textContent = msg;
+          errEl.hidden = !msg;
+        }
+
+        function loadList() {
+          showErr("");
+          return fetch(api)
+            .then(function (r) {
+              if (!r.ok) throw new Error("GET failed");
+              return r.json();
+            })
+            .then(function (rows) {
+              render(rows || []);
+            })
+            .catch(function (e) {
+              showErr(
+                "API unreachable — start PHP in this folder: php -S localhost:8080  (" +
+                  (e.message || e) +
+                  ")"
+              );
+              tbody.innerHTML = "";
+            });
+        }
+
+        function escapeHtml(s) {
+          var d = document.createElement("div");
+          d.textContent = s;
+          return d.innerHTML;
+        }
+
+        function render(rows) {
+          tbody.innerHTML = "";
+          rows.forEach(function (row) {
+            var tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" +
+              row.id +
+              "</td><td>" +
+              escapeHtml(row.title) +
+              "</td><td>" +
+              escapeHtml(row.detail) +
+              '</td><td><button type="button" data-edit="' +
+              row.id +
+              '">Edit</button> <button type="button" data-del="' +
+              row.id +
+              '">Delete</button></td>';
+            tbody.appendChild(tr);
+          });
+
+          tbody.querySelectorAll("[data-edit]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var id = parseInt(btn.getAttribute("data-edit"), 10);
+              fetch(api)
+                .then(function (r) {
+                  return r.json();
+                })
+                .then(function (rows) {
+                  var row = rows.find(function (x) {
+                    return x.id === id;
+                  });
+                  if (!row) return;
+                  editingId = id;
+                  fieldId.value = String(id);
+                  fieldTitle.value = row.title;
+                  fieldDetail.value = row.detail;
+                  btnCancel.hidden = false;
+                });
+            });
+          });
+
+          tbody.querySelectorAll("[data-del]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var id = parseInt(btn.getAttribute("data-del"), 10);
+              if (!window.confirm("Delete row " + id + "?")) return;
+              fetch(api + "?id=" + encodeURIComponent(id), { method: "DELETE" })
+                .then(function (r) {
+                  if (r.status === 404) throw new Error("not found");
+                  if (!r.ok) throw new Error("delete failed");
+                  if (editingId === id) resetForm();
+                  return loadList();
+                })
+                .catch(function (e) {
+                  showErr(String(e.message || e));
+                });
+            });
+          });
+        }
+
+        function resetForm() {
+          editingId = null;
+          fieldId.value = "";
+          fieldTitle.value = "";
+          fieldDetail.value = "";
+          btnCancel.hidden = true;
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var title = fieldTitle.value.trim();
+          var detail = fieldDetail.value.trim();
+          if (!title || !detail) return;
+
+          var body = JSON.stringify({ title: title, detail: detail });
+          var req;
+          if (editingId != null) {
+            req = fetch(api + "?id=" + encodeURIComponent(editingId), {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: body,
+            });
+          } else {
+            req = fetch(api, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: body,
+            });
+          }
+
+          req
+            .then(function (r) {
+              if (!r.ok) {
+                return r.json().then(function (j) {
+                  throw new Error(j.error || "save failed");
+                });
+              }
+              return r.json();
+            })
+            .then(function () {
+              resetForm();
+              return loadList();
+            })
+            .catch(function (e) {
+              showErr(String(e.message || e));
+            });
+        });
+
+        btnCancel.addEventListener("click", function () {
+          resetForm();
+        });
+
+        loadList();
+      })();
+    </script>
   </body>
 </html>
