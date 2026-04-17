@@ -1,0 +1,28 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# PHP
+/vendor/
+
+# Logs
+*.log
+
+# Private notes (optional)
+*.private.*
+*.private
+
+# Team planning, local setup, and task splits (not for public GitHub)
+TASKS-AND-SETUP.private.md
+*TEAM-PLAN*.md
+*SETUP*.local*
+tasks-*.local.md
