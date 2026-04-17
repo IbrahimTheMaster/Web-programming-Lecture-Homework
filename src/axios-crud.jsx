@@ -61,17 +61,18 @@ function App() {
   }
 
   function onEdit(row) {
-    setEditingId(row.id);
-    setTitle(row.title);
-    setDetail(row.detail);
+    setEditingId(Number(row.id));
+    setTitle(String(row.title));
+    setDetail(String(row.detail));
   }
 
   function onDelete(id) {
-    if (!window.confirm("Delete row " + id + "?")) return;
+    const nid = Number(id);
+    if (!window.confirm("Delete row " + nid + "?")) return;
     axios
-      .delete(api + "?id=" + encodeURIComponent(id))
+      .delete(api + "?id=" + encodeURIComponent(nid))
       .then(() => {
-        if (editingId === id) resetForm();
+        if (Number(editingId) === nid) resetForm();
         load();
       })
       .catch((e) => {

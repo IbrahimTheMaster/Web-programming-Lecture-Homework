@@ -140,7 +140,7 @@
                 })
                 .then(function (rows) {
                   var row = rows.find(function (x) {
-                    return x.id === id;
+                    return Number(x.id) === id;
                   });
                   if (!row) return;
                   editingId = id;

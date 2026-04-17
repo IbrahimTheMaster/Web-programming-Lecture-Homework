@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function calc(a, b, op) {
+function compute(a, b, op) {
   if (op === "+") return a + b;
   if (op === "-") return a - b;
   if (op === "*") return a * b;
@@ -8,47 +8,77 @@ function calc(a, b, op) {
   return b;
 }
 
+function formatResult(n) {
+  if (!Number.isFinite(n)) return "Error";
+  const s = String(n);
+  if (s.length > 12) return Number(n.toPrecision(10)).toString();
+  return s;
+}
+
 export default function App() {
   const [display, setDisplay] = useState("0");
-  const [acc, setAcc] = useState(null);
-  const [op, setOp] = useState(null);
+  const [stored, setStored] = useState(null);
+  const [pendingOp, setPendingOp] = useState(null);
+  const [overwrite, setOverwrite] = useState(false);
 
   function pressDigit(d) {
-    setDisplay((x) => {
-      if (x === "0" && d !== ".") return d;
-      if (d === "." && x.includes(".")) return x;
-      return x + d;
-    });
+    if (display === "Error") {
+      setDisplay(d === "." ? "0." : d);
+      setStored(null);
+      setPendingOp(null);
+      setOverwrite(false);
+      return;
+    }
+    if (overwrite) {
+      setDisplay(d === "." ? "0." : d);
+      setOverwrite(false);
+      return;
+    }
+    if (d === ".") {
+      setDisplay((x) => (x.includes(".") ? x : x + "."));
+      return;
+    }
+    setDisplay((x) => (x === "0" ? d : x + d));
   }
 
   function pressOp(next) {
     const v = parseFloat(display);
-    if (Number.isNaN(v)) return;
-    if (acc != null && op) {
-      const r = calc(acc, v, op);
-      setAcc(r);
-      setDisplay(String(r));
-    } else {
-      setAcc(v);
+    if (Number.isNaN(v) || display === "Error") return;
+
+    if (stored != null && pendingOp != null && !overwrite) {
+      const r = compute(stored, v, pendingOp);
+      const shown = formatResult(r);
+      setDisplay(shown);
+      setStored(Number.isFinite(r) ? r : null);
+      if (!Number.isFinite(r)) {
+        setPendingOp(null);
+        setOverwrite(true);
+        return;
+      }
+    } else if (stored == null) {
+      setStored(v);
     }
-    setOp(next);
-    setDisplay("0");
+
+    setPendingOp(next);
+    setOverwrite(true);
   }
 
   function pressEq() {
-    if (acc == null || op == null) return;
+    if (stored == null || pendingOp == null || display === "Error") return;
     const v = parseFloat(display);
     if (Number.isNaN(v)) return;
-    const r = calc(acc, v, op);
-    setDisplay(Number.isFinite(r) ? String(r) : "Error");
-    setAcc(null);
-    setOp(null);
+    const r = compute(stored, v, pendingOp);
+    setDisplay(formatResult(r));
+    setStored(null);
+    setPendingOp(null);
+    setOverwrite(true);
   }
 
   function pressClear() {
     setDisplay("0");
-    setAcc(null);
-    setOp(null);
+    setStored(null);
+    setPendingOp(null);
+    setOverwrite(false);
   }
 
   const keys = [
