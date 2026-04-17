@@ -47,7 +47,14 @@ git remote set-url origin git@github.com:IbrahimTheMaster/Web-programming-Lectur
 git push -u origin main
 ```
 
-If this PC was logged into **another** GitHub user before, sign out in the browser credential helper or use SSH with **Ibrahim’s** key only for this repo.
+If this PC has **several GitHub accounts**, you may use an SSH **`Host` alias** in `~/.ssh/config` (e.g. `github-account1`) so this repo uses **Ibrahim’s** key:
+
+```bash
+git remote set-url origin git@github-account1:IbrahimTheMaster/Web-programming-Lecture-Homework.git
+git push -u origin main
+```
+
+If Git over **HTTPS** keeps using the wrong account, prefer **SSH** for this repo or clear cached credentials.
 
 ### 5. Invite Chika (King)
 
