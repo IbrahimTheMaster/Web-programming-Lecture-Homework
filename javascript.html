@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>JavaScript — homework</title>
+    <title>JavaScript CRUD — homework</title>
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
@@ -21,12 +21,186 @@
         </ul>
       </nav>
     </header>
+
     <main>
-      <p class="stub">Chika is adding the CRUD here (day 1).</p>
+      <p>
+        Vanilla JS CRUD. Data starts from <code>data/sample.json</code> (stands in for a slice of
+        whatever table we choose from the course Drive folder), then lives in an in-memory array.
+      </p>
+
+      <p id="load-error" class="err" hidden></p>
+
+      <section class="crud-panel" aria-labelledby="crud-form-title">
+        <h2 id="crud-form-title">Add or edit</h2>
+        <form id="item-form">
+          <input type="hidden" id="field-id" value="" />
+          <label>
+            Title
+            <input type="text" id="field-title" required maxlength="120" />
+          </label>
+          <label>
+            Detail
+            <input type="text" id="field-detail" required maxlength="240" />
+          </label>
+          <button type="submit" id="btn-save">Save</button>
+          <button type="button" id="btn-cancel" hidden>Cancel edit</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="list-title">
+        <h2 id="list-title">Rows</h2>
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Detail</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rows-body"></tbody>
+        </table>
+      </section>
     </main>
+
     <footer>
       <p>Ibrahim Aliyu — Neptun: XXXXXX</p>
       <p>Chika Chinedu David — Neptun: YYYYYY</p>
     </footer>
+
+    <script>
+      (function () {
+        /** @type {{id:number, title:string, detail:string}[]} */
+        var items = [];
+        var editingId = null;
+
+        var tbody = document.getElementById("rows-body");
+        var form = document.getElementById("item-form");
+        var fieldId = document.getElementById("field-id");
+        var fieldTitle = document.getElementById("field-title");
+        var fieldDetail = document.getElementById("field-detail");
+        var btnCancel = document.getElementById("btn-cancel");
+        var errEl = document.getElementById("load-error");
+
+        function nextId() {
+          if (!items.length) return 1;
+          return Math.max.apply(
+            null,
+            items.map(function (r) {
+              return r.id;
+            })
+          ) + 1;
+        }
+
+        function render() {
+          tbody.innerHTML = "";
+          items.forEach(function (row) {
+            var tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" +
+              row.id +
+              "</td><td>" +
+              escapeHtml(row.title) +
+              "</td><td>" +
+              escapeHtml(row.detail) +
+              '</td><td><button type="button" data-edit="' +
+              row.id +
+              '">Edit</button> <button type="button" data-del="' +
+              row.id +
+              '">Delete</button></td>';
+            tbody.appendChild(tr);
+          });
+
+          tbody.querySelectorAll("[data-edit]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var id = parseInt(btn.getAttribute("data-edit"), 10);
+              var row = items.find(function (r) {
+                return r.id === id;
+              });
+              if (!row) return;
+              editingId = id;
+              fieldId.value = String(id);
+              fieldTitle.value = row.title;
+              fieldDetail.value = row.detail;
+              btnCancel.hidden = false;
+            });
+          });
+
+          tbody.querySelectorAll("[data-del]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var id = parseInt(btn.getAttribute("data-del"), 10);
+              if (!window.confirm("Delete row " + id + "?")) return;
+              items = items.filter(function (r) {
+                return r.id !== id;
+              });
+              if (editingId === id) resetForm();
+              render();
+            });
+          });
+        }
+
+        function escapeHtml(s) {
+          var d = document.createElement("div");
+          d.textContent = s;
+          return d.innerHTML;
+        }
+
+        function resetForm() {
+          editingId = null;
+          fieldId.value = "";
+          fieldTitle.value = "";
+          fieldDetail.value = "";
+          btnCancel.hidden = true;
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var title = fieldTitle.value.trim();
+          var detail = fieldDetail.value.trim();
+          if (!title || !detail) return;
+
+          if (editingId !== null) {
+            var row = items.find(function (r) {
+              return r.id === editingId;
+            });
+            if (row) {
+              row.title = title;
+              row.detail = detail;
+            }
+          } else {
+            items.push({ id: nextId(), title: title, detail: detail });
+          }
+          resetForm();
+          render();
+        });
+
+        btnCancel.addEventListener("click", function () {
+          resetForm();
+        });
+
+        fetch("data/sample.json")
+          .then(function (res) {
+            if (!res.ok) throw new Error("could not load data file");
+            return res.json();
+          })
+          .then(function (data) {
+            if (!Array.isArray(data)) throw new Error("bad json shape");
+            items = data.map(function (r) {
+              return {
+                id: r.id,
+                title: String(r.title),
+                detail: String(r.detail),
+              };
+            });
+            render();
+          })
+          .catch(function (e) {
+            errEl.textContent =
+              "Could not load sample.json — use a local server (e.g. php -S localhost:8080) so fetch works. " +
+              (e && e.message ? e.message : "");
+            errEl.hidden = false;
+          });
+      })();
+    </script>
   </body>
 </html>

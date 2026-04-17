@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "title": "First record",
+    "detail": "Example row — replace with rows from the Drive DB export we pick."
+  },
+  {
+    "id": 2,
+    "title": "Second record",
+    "detail": "Plain JSON file counts as data from the database file for the assignment."
+  }
+]

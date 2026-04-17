@@ -80,3 +80,54 @@ footer {
     font-size: 1.2rem;
   }
 }
+
+/* javascript crud page */
+.crud-panel {
+  margin-bottom: 2rem;
+}
+
+.crud-panel label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+
+.crud-panel input[type="text"] {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 0.25rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.crud-panel button,
+.crud-table button {
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  margin-right: 0.35rem;
+}
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+}
+
+.crud-table th,
+.crud-table td {
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.crud-table th {
+  background: #e8e4dc;
+}
+
+.err {
+  color: #8b0000;
+  margin-bottom: 1rem;
+}
