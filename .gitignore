@@ -14,6 +14,13 @@ Thumbs.db
 # PHP
 /vendor/
 
+# Node (React build)
+node_modules/
+
+# Local DB / server-side data files (Fetch API)
+data/homework.sqlite
+data/items.json
+
 # Logs
 *.log
 
