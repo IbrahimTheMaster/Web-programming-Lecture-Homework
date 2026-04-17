@@ -21,12 +21,92 @@
         </ul>
       </nav>
     </header>
+
     <main>
-      <p class="stub">Object-oriented JS page — todo.</p>
+      <p>
+        Small object-oriented demo: base sprite, moving player subclass, uses
+        <code>extends</code> / <code>super</code>, <code>appendChild</code>, and a bit of animation.
+      </p>
+      <div id="oojs-stage" class="oojs-stage" aria-live="polite"></div>
     </main>
+
     <footer>
       <p>Ibrahim Aliyu — Neptun: XXXXXX</p>
       <p>Chika Chinedu David — Neptun: YYYYYY</p>
     </footer>
+
+    <script>
+      (function () {
+        class Sprite {
+          constructor(x, y, label) {
+            this.x = x;
+            this.y = y;
+            this.label = label;
+          }
+          move(dx, dy) {
+            this.x += dx;
+            this.y += dy;
+          }
+        }
+
+        class Block extends Sprite {
+          constructor(x, y, label, color) {
+            super(x, y, label);
+            this.color = color;
+          }
+          createEl() {
+            var el = document.createElement("div");
+            el.textContent = this.label;
+            el.style.position = "absolute";
+            el.style.left = this.x + "px";
+            el.style.top = this.y + "px";
+            el.style.padding = "6px 10px";
+            el.style.background = this.color;
+            el.style.borderRadius = "4px";
+            el.style.fontFamily = "system-ui,sans-serif";
+            el.style.fontSize = "14px";
+            this.el = el;
+            return el;
+          }
+        }
+
+        class Player extends Block {
+          constructor(x, y) {
+            super(x, y, "player", "#0b4f6c");
+            this.score = 0;
+          }
+          step() {
+            this.move(8, 0);
+            if (this.x > 220) this.x = 8;
+            if (this.el) {
+              this.el.style.left = this.x + "px";
+              this.el.style.top = this.y + "px";
+            }
+          }
+        }
+
+        var stage = document.getElementById("oojs-stage");
+        if (!stage) return;
+
+        var p = new Player(8, 24);
+        var node = p.createEl();
+        stage.style.position = "relative";
+        stage.style.minHeight = "80px";
+        document.body.appendChild(
+          (function () {
+            var hint = document.createElement("p");
+            hint.style.fontSize = "12px";
+            hint.style.color = "#444";
+            hint.textContent = "(OOJS: Player appended below via appendChild — watch it move.)";
+            return hint;
+          })()
+        );
+        stage.appendChild(node);
+
+        setInterval(function () {
+          p.step();
+        }, 400);
+      })();
+    </script>
   </body>
 </html>

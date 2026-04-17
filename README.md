@@ -22,4 +22,5 @@ Hand-in for the course is the PDF (Teams), not this repo. The PDF still has to e
 - Static pages: `php -S localhost:8080` from this folder (or any static server).
 - **React page:** run `npm install` once, then `npm run build:react` if you edit `src/react-crud.jsx`. The built `assets/react-crud.js` is in the repo so hosting works without Node.
 - **Axios + React page:** `npm run build:axios` after changing `src/axios-crud.jsx` (built file: `assets/axios-crud.js`).
+- **SPA mini-apps:** sources in `react/calculator/src` and `react/tictactoe/src`. Run `npm run build:calc`, `npm run build:ttt`, or `npm run build:spa` to refresh both `dist` folders before upload.
 - **Fetch API page:** needs PHP. Copy `api/config.local.example.php` to `api/config.local.php` on the server with MySQL credentials from the host; otherwise it falls back to SQLite or a JSON file under `data/` for local dev.

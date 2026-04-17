@@ -21,12 +21,59 @@
         </ul>
       </nav>
     </header>
+
     <main>
-      <p class="stub">SPA with two small React apps — coming later.</p>
+      <p>
+        Single page with two menu buttons — each loads one small React app (calculator vs
+        tic-tac-toe). Sources and bundles live under <code>react/calculator/</code> and
+        <code>react/tictactoe/</code> (<code>src</code> + <code>dist</code>).
+      </p>
+
+      <div class="spa-tabs" role="tablist" aria-label="SPA mini apps">
+        <button type="button" id="tab-calc" role="tab" aria-selected="true" aria-controls="panel-calc">
+          Calculator
+        </button>
+        <button type="button" id="tab-ttt" role="tab" aria-selected="false" aria-controls="panel-ttt">
+          Tic-tac-toe
+        </button>
+      </div>
+
+      <div id="panel-calc" class="spa-panel" role="tabpanel">
+        <div id="calc-root"></div>
+      </div>
+      <div id="panel-ttt" class="spa-panel" hidden role="tabpanel">
+        <div id="ttt-root"></div>
+      </div>
     </main>
+
     <footer>
       <p>Ibrahim Aliyu — Neptun: XXXXXX</p>
       <p>Chika Chinedu David — Neptun: YYYYYY</p>
     </footer>
+
+    <script type="module" src="react/calculator/dist/app.js"></script>
+    <script type="module" src="react/tictactoe/dist/app.js"></script>
+    <script>
+      (function () {
+        var a = document.getElementById("tab-calc");
+        var b = document.getElementById("tab-ttt");
+        var pa = document.getElementById("panel-calc");
+        var pb = document.getElementById("panel-ttt");
+        function showCalc() {
+          pa.hidden = false;
+          pb.hidden = true;
+          a.setAttribute("aria-selected", "true");
+          b.setAttribute("aria-selected", "false");
+        }
+        function showTtt() {
+          pb.hidden = false;
+          pa.hidden = true;
+          b.setAttribute("aria-selected", "true");
+          a.setAttribute("aria-selected", "false");
+        }
+        a.addEventListener("click", showCalc);
+        b.addEventListener("click", showTtt);
+      })();
+    </script>
   </body>
 </html>
