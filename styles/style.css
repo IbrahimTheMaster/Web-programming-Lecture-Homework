@@ -131,3 +131,97 @@ footer {
   color: #8b0000;
   margin-bottom: 1rem;
 }
+
+/* SPA mini-apps + tic-tac-toe grid */
+.spa-mini {
+  font-family: system-ui, sans-serif;
+  max-width: 22rem;
+}
+
+.spa-mini__title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.ttt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 4rem);
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+}
+
+.ttt-cell {
+  height: 4rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.ttt-cell:hover {
+  background: #f0f0f0;
+}
+
+/* calculator + SPA tabs (rest filled day 3) */
+.calc-display {
+  font-family: ui-monospace, monospace;
+  font-size: 1.35rem;
+  padding: 0.5rem 0.5rem;
+  background: #e8e4dc;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+  text-align: right;
+}
+
+.calc-keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+  max-width: 16rem;
+}
+
+.calc-key {
+  padding: 0.6rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.calc-clear {
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.75rem;
+}
+
+.spa-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.spa-tabs button {
+  padding: 0.4rem 0.85rem;
+  font-family: system-ui, sans-serif;
+  cursor: pointer;
+  border: 1px solid #0b4f6c;
+  background: #fff;
+  color: #0b4f6c;
+}
+
+.spa-tabs button[aria-pressed="true"] {
+  background: #0b4f6c;
+  color: #fff;
+}
+
+.spa-panel {
+  margin-top: 0.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px dashed #ccc;
+}
+
+.oojs-stage {
+  min-height: 10rem;
+  padding: 1rem;
+  background: #e8f4f8;
+  border: 1px solid #9cc;
+  margin-top: 0.75rem;
+}
