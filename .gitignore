@@ -13,6 +13,7 @@ Thumbs.db
 
 # PHP
 /vendor/
+api/config.local.php
 
 # Node (React build)
 node_modules/

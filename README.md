@@ -22,6 +22,10 @@ Same for anything named like `*.private.*` — local only.
 
 Hand-in for the course is the PDF (Teams), not this repo. The PDF still has to explain who built which part.
 
+**Hosting (task 8):** see **`HOSTING.md`** — MySQL + `api/config.local.php` on the server only (gitignored).  
+
+**PDF (task 11):** start from **`documentation/PROJECT-DOCUMENTATION.md`** — add screenshots, fill URLs and Neptun codes, export to PDF (≥15 pages), submit to Teams.
+
 ---
 
 **Run locally**

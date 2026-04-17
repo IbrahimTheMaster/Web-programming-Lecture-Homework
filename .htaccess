@@ -1,0 +1,8 @@
+# Apache (typical on shared hosting). Adjust if your host uses nginx only.
+
+DirectoryIndex index.html index.php
+
+<IfModule mod_headers.c>
+  # Optional: allow same-origin API calls; tighten for production if needed
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>
